@@ -1,25 +1,40 @@
-document.getElementById("login-form").addEventListener("submit", async function (e) {
-    e.preventDefault();
+document.addEventListener("DOMContentLoaded", function () {
+    const loginForm = document.getElementById("login-form");
 
-    const cpf = document.getElementById("cpf").value;
-    const senha = document.getElementById("senha").value;
+    if (!loginForm) {
+        console.error("🔥 Formulário de login não encontrado!");
+        return;
+    }
 
-    try {
-        const response = await fetch("https://friendly-space-system-5grpggpxg54rc4656-3000.app.github.dev/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ cpf, senha })
-        });
+    loginForm.addEventListener("submit", async function (event) {
+        event.preventDefault();
 
-        const data = await response.json();
+        const cpf = document.getElementById("cpf").value.trim();
+        const senha = document.getElementById("senha").value.trim();
 
-        if (!response.ok) {
-            throw new Error(data.error || "Erro ao fazer login");
+        if (!cpf || !senha) {
+            alert("Por favor, preencha todos os campos!");
+            return;
         }
 
-        localStorage.setItem("token", data.token);
-        window.location.href = "perfil.html";
-    } catch (error) {
-        alert(error.message);
-    }
+        try {
+            const API_URL = window.location.origin; // Usa localhost ou GitHub Codespaces automaticamente
+
+            const response = await fetch(`${API_URL}/login`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ cpf, senha }),
+                credentials: "include" // 🔹 Permite envio de cookies
+            });
+
+            if (!response.ok) throw new Error("Erro ao autenticar usuário");
+
+            alert("✅ Login bem-sucedido!");
+            window.location.href = "perfil.html";
+
+        } catch (error) {
+            console.error("❌ Erro no login:", error);
+            alert("Erro ao fazer login. Verifique suas credenciais.");
+        }
+    });
 });

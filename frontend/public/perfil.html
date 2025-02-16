@@ -6,6 +6,27 @@
 
     <meta charset="utf-8" />
     <title>Perfil | BeneSys</title>
+
+    <style>
+        /* 🔹 Oculta o corpo da página até o JavaScript liberar a exibição */
+        body {
+            display: none;
+        }
+    </style>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const token = localStorage.getItem("token");
+
+            if (!token) {
+                window.location.href = "login.html";
+            } else {
+                // 🔹 Mostra o corpo da página apenas se o token existir
+                document.body.style.display = "block";
+            }
+        });
+    </script>
+    
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <!-- App favicon -->
     <link rel="shortcut icon" href="assets/images/favicon.ico">
@@ -658,7 +679,10 @@
     
    <!-- quill js -->
    <script src="assets/libs/quill/quill.min.js"></script>
+  
+   <!-- Chamando o script do perfil -->
    <script src="js/perfil.js"></script>
+
 </body>
 
 </html>

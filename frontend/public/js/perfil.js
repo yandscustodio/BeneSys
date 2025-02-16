@@ -1,33 +1,38 @@
 document.addEventListener("DOMContentLoaded", async function () {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-        alert("Você precisa estar logado para acessar esta página!");
-        window.location.href = "login.html";
-        return;
-    }
+    console.log("🔹 Iniciando carregamento do perfil...");
 
     try {
-        const response = await fetch("http://localhost:3000/perfil", {
+        const API_URL = window.location.origin; // Usa localhost ou GitHub Codespaces automaticamente
+
+        const response = await fetch(`${API_URL}/perfil`, {
             method: "GET",
-            headers: { "Authorization": `Bearer ${token}` }
+            credentials: "include" // 🔹 Permite envio automático do cookie
         });
 
-        if (!response.ok) {
-            throw new Error(`Erro ${response.status}: ${response.statusText}`);
-        }
+        if (!response.ok) throw new Error("Erro ao carregar perfil");
 
-        const user = await response.json();
+        const usuario = await response.json();
+        console.log("✅ Dados do usuário carregados:", usuario);
 
-        document.getElementById("nomeCompleto").textContent = `${user.primeiro_nome} ${user.ultimo_nome}` || "Nome não disponível";
-        document.getElementById("fotoCapa").src = user.foto_capa || "assets/images/profile-bg.jpg";
-        document.getElementById("fotoPerfil").src = user.foto_perfil || "assets/images/users/avatar-1.jpg";
-        document.getElementById("funcaoUsuario").textContent = user.funcao || "Função não informada";
+        // Atualiza os elementos HTML com os dados do usuário
+        document.getElementById("nomeUsuario").innerText = usuario.primeiro_nome + " " + usuario.ultimo_nome;
+        document.getElementById("funcaoUsuario").innerText = usuario.funcao;
+        document.getElementById("telefoneUsuario").innerText = usuario.telefone;
+        document.getElementById("emailUsuario").innerText = usuario.email;
+        document.getElementById("dataAdmissaoUsuario").innerText = usuario.data_admissao;
+        document.getElementById("unidadeUsuario").innerText = usuario.unidade;
+        document.getElementById("cidadeUsuario").innerText = usuario.cidade;
+        document.getElementById("estadoUsuario").innerText = usuario.estado;
+        document.getElementById("paisUsuario").innerText = usuario.pais;
+        document.getElementById("bioUsuario").innerText = usuario.bio;
+
+        // Atualiza as imagens de perfil e capa
+        document.getElementById("fotoPerfil").src = usuario.foto_perfil ? usuario.foto_perfil : "assets/images/users/avatar-1.jpg";
+        document.getElementById("fotoCapa").src = usuario.foto_capa ? usuario.foto_capa : "assets/images/profile-bg.jpg";
 
     } catch (error) {
-        console.error("Erro ao buscar os dados do usuário:", error);
-        alert(`Erro ao carregar os dados: ${error.message}`);
-        localStorage.removeItem("token");
+        console.error("🔥 Erro ao carregar o perfil:", error);
+        alert("Erro ao carregar os dados. Faça login novamente.");
         window.location.href = "login.html";
     }
 });
