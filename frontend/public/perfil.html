@@ -113,8 +113,8 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        <h5 class="fs-16 mb-1" id="nomeCompleto">Carregando...</h5>
-                                        <p class="text-muted mb-0" id="funcaoUsuario">Função</p>
+                                        <h5 class="fs-16 mb-1" id="nomeCompleto">...</h5>
+                                        <p class="text-muted mb-0" id="funcao">...</p>
                                     </div>
                                 </div>
                             </div>
@@ -131,35 +131,28 @@
                                     <div class="mb-3 d-flex">
                                         <div class="avatar-xs d-block flex-shrink-0 me-3">
                                             <span class="avatar-title rounded-circle fs-16 bg-body text-body material-shadow">
-                                                <i class="ri-github-fill"></i>
+                                                <i class="ri-facebook-fill"></i>
                                             </span>
                                         </div>
-                                        <input type="email" class="form-control" id="gitUsername" placeholder="Username" value="@daveadame">
+                                        <input type="email" class="form-control" id="facebook" placeholder="Username">
                                     </div>
                                     <div class="mb-3 d-flex">
                                         <div class="avatar-xs d-block flex-shrink-0 me-3">
                                             <span class="avatar-title rounded-circle fs-16 bg-primary material-shadow">
-                                                <i class="ri-global-fill"></i>
+                                                <i class="ri-instagram-fill"></i>
                                             </span>
                                         </div>
-                                        <input type="text" class="form-control" id="websiteInput" placeholder="www.example.com" value="www.velzon.com">
+                                        <input type="text" class="form-control" id="instagram">
                                     </div>
                                     <div class="mb-3 d-flex">
                                         <div class="avatar-xs d-block flex-shrink-0 me-3">
                                             <span class="avatar-title rounded-circle fs-16 bg-success material-shadow">
-                                                <i class="ri-dribbble-fill"></i>
+                                                <i class="ri-linkedin-fill"></i>
                                             </span>
                                         </div>
-                                        <input type="text" class="form-control" id="dribbleName" placeholder="Username" value="@dave_adame">
+                                        <input type="text" class="form-control" id="linkedin">
                                     </div>
-                                    <div class="d-flex">
-                                        <div class="avatar-xs d-block flex-shrink-0 me-3">
-                                            <span class="avatar-title rounded-circle fs-16 bg-danger material-shadow">
-                                                <i class="ri-pinterest-fill"></i>
-                                            </span>
-                                        </div>
-                                        <input type="text" class="form-control" id="pinterestName" placeholder="Username" value="Advance Dave">
-                                    </div>
+                                    
                                 </div>
                             </div>
                             <!--end card-->
@@ -199,36 +192,51 @@
                                                     <div class="col-lg-6">
                                                         <div class="mb-3">
                                                             <label for="firstnameInput" class="form-label">Primeiro Nome</label>
-                                                            <input type="text" class="form-control" id="firstnameInput" placeholder="Enter your firstname" value="Dave">
+                                                            <input type="text" class="form-control" id="primeiro_nome" placeholder="Digite seu primeiro">
                                                         </div>
                                                     </div>
                                                     <!--end col-->
                                                     <div class="col-lg-6">
                                                         <div class="mb-3">
                                                             <label for="lastnameInput" class="form-label">Último Nome</label>
-                                                            <input type="text" class="form-control" id="lastnameInput" placeholder="Enter your lastname" value="Adame">
+                                                            <input type="text" class="form-control" id="ultimo_nome" placeholder="Digite seu último nome">
                                                         </div>
                                                     </div>
                                                     <!--end col-->
                                                     <div class="col-lg-6">
                                                         <div class="mb-3">
                                                             <label for="phonenumberInput" class="form-label">Telefone</label>
-                                                            <input type="text" class="form-control" id="phonenumberInput" placeholder="Enter your phone number" value="+(1) 987 6543">
+                                                            <input type="text" class="form-control" id="telefone" placeholder="Digite seu telefone...">
                                                         </div>
                                                     </div>
                                                     <!--end col-->
                                                     <div class="col-lg-6">
                                                         <div class="mb-3">
                                                             <label for="emailInput" class="form-label">E-mail</label>
-                                                            <input type="email" class="form-control" id="emailInput" placeholder="Enter your email" value="daveadame@velzon.com">
+                                                            <input type="email" class="form-control" id="email" placeholder="Digite seu e-mail...">
                                                         </div>
                                                     </div>
                                                     <!--end col-->
-                                                    <div class="col-lg-12">
+                                                    <div class="col-lg-4">
                                                         <div class="mb-3">
                                                             <label for="JoiningdatInput" class="form-label">Data Admissão</label>
-                                                            <input type="text" class="form-control" data-provider="flatpickr" id="JoiningdatInput" data-date-format="d M, Y" data-deafult-date="24 Nov, 2021" placeholder="Select date" />
+                                                            <input type="text" class="form-control" data-provider="flatpickr" id="data_admissao" data-date-format="d M, Y" placeholder="Selecione data..." />
                                                         </div>
+                                                        
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="mb-3">
+                                                            <label for="JoiningdatInput" class="form-label">Matricula</label>
+                                                            <input type="text" class="form-control" id="matricula" placeholder="Sua Matricula...">
+                                                        </div>
+                                                        
+                                                    </div>
+                                                    <div class="col-lg-4">
+                                                        <div class="mb-3">
+                                                            <label for="JoiningdatInput" class="form-label">CPF</label>
+                                                            <input type="text" class="form-control" id="cpf" placeholder="Digite seu CPF...">
+                                                        </div>
+                                                        
                                                     </div>
                                                     <!--end col-->
                                                     
@@ -236,42 +244,42 @@
                                                     <div class="col-lg-6">
                                                         <div class="mb-3">
                                                             <label for="designationInput" class="form-label">Função</label>
-                                                            <input type="text" class="form-control" id="designationInput" placeholder="Designation" value="Lead Designer / Developer">
+                                                            <input type="text" class="form-control" id="funcao" placeholder="Sua Função...">
                                                         </div>
                                                     </div>
                                                     <!--end col-->
                                                     <div class="col-lg-6">
                                                         <div class="mb-3">
                                                             <label for="websiteInput1" class="form-label">Unidade</label>
-                                                            <input type="text" class="form-control" id="websiteInput1" placeholder="www.example.com" value="www.velzon.com" />
+                                                            <input type="text" class="form-control" id="unidade" placeholder="Unidade de Atuação"/>
                                                         </div>
                                                     </div>
                                                     <!--end col-->
                                                     <div class="col-lg-4">
                                                         <div class="mb-3">
                                                             <label for="cityInput" class="form-label">Cidade</label>
-                                                            <input type="text" class="form-control" id="cityInput" placeholder="City" value="California" />
+                                                            <input type="text" class="form-control" id="cidade" placeholder="Cidade" />
                                                         </div>
                                                     </div>
                                                     <!--end col-->
                                                     <div class="col-lg-4">
                                                         <div class="mb-3">
                                                             <label for="countryInput" class="form-label">Estado</label>
-                                                            <input type="text" class="form-control" id="countryInput" placeholder="Country" value="United States" />
+                                                            <input type="text" class="form-control" id="estado" placeholder="Estado" />
                                                         </div>
                                                     </div>
                                                     <!--end col-->
                                                     <div class="col-lg-4">
                                                         <div class="mb-3">
-                                                            <label for="zipcodeInput" class="form-label">Pais</label>
-                                                            <input type="text" class="form-control" minlength="5" maxlength="6" id="zipcodeInput" placeholder="Enter zipcode" value="90011">
+                                                            <label for="pais" class="form-label">Pais</label>
+                                                            <input type="text" class="form-control" id="pais" placeholder="pais" />
                                                         </div>
                                                     </div>
                                                     <!--end col-->
                                                     <div class="col-lg-12">
                                                         <div class="mb-3 pb-2">
                                                             <label for="exampleFormControlTextarea" class="form-label">Bio</label>
-                                                            <textarea class="form-control" id="exampleFormControlTextarea" placeholder="Enter your description" rows="3">Hi I'm Anna Adame,It will be as simple as Occidental; in fact, it will be Occidental. To an English person, it will seem like simplified English, as a skeptical Cambridge friend of mine told me what Occidental is European languages are members of the same family.</textarea>
+                                                            <textarea class="form-control" id="bio" placeholder="Fale sobre você!" rows="3"></textarea>
                                                         </div>
                                                     </div>
                                                     <!--end col-->

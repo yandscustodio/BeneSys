@@ -76,7 +76,7 @@ const verificarTokenCookie = (req, res, next) => {
     }
 };
 
-// 🔹 Rota protegida - Perfil do usuário autenticado
+// 🔹 Rota protegida - Obter perfil do usuário autenticado
 app.get("/perfil", verificarTokenCookie, async (req, res) => {
     try {
         const result = await pool.query("SELECT * FROM usuarios WHERE id = $1", [req.usuario.id]);
@@ -89,6 +89,60 @@ app.get("/perfil", verificarTokenCookie, async (req, res) => {
     } catch (error) {
         console.error("Erro ao buscar perfil:", error);
         res.status(500).json({ error: "Erro ao buscar perfil" });
+    }
+});
+
+// 🔹 Rota PUT - Atualizar perfil do usuário autenticado
+app.put("/perfil", verificarTokenCookie, async (req, res) => {
+    const {
+        primeiro_nome,
+        ultimo_nome,
+        telefone,
+        email,
+        data_admissao,
+        matricula,
+        cpf,
+        funcao,
+        unidade,
+        cidade,
+        estado,
+        pais,
+        bio
+    } = req.body;
+
+    try {
+        // 🔹 Atualiza apenas os campos que foram fornecidos pelo usuário
+        const result = await pool.query(
+            `UPDATE usuarios SET 
+                primeiro_nome = COALESCE($1, primeiro_nome), 
+                ultimo_nome = COALESCE($2, ultimo_nome), 
+                telefone = COALESCE($3, telefone), 
+                email = COALESCE($4, email),
+                data_admissao = COALESCE($5, data_admissao),
+                matricula = COALESCE($6, matricula),
+                cpf = COALESCE($7, cpf),
+                funcao = COALESCE($8, funcao),
+                unidade = COALESCE($9, unidade),
+                cidade = COALESCE($10, cidade),
+                estado = COALESCE($11, estado),
+                pais = COALESCE($12, pais),
+                bio = COALESCE($13, bio)
+            WHERE id = $14 RETURNING *`,
+            [
+                primeiro_nome, ultimo_nome, telefone, email, data_admissao,
+                matricula, cpf, funcao, unidade, cidade, estado, pais, bio, req.usuario.id
+            ]
+        );
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: "Usuário não encontrado" });
+        }
+
+        res.json({ message: "Perfil atualizado com sucesso!", usuario: result.rows[0] });
+
+    } catch (error) {
+        console.error("Erro ao atualizar perfil:", error);
+        res.status(500).json({ error: "Erro ao atualizar perfil" });
     }
 });
 
