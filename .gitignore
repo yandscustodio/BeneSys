@@ -1,0 +1,21 @@
+# Node.js
+node_modules/
+package-lock.json
+
+# Variáveis de ambiente (senhas, conexões)
+backend/.env
+
+# Logs
+logs/
+*.log
+
+# Banco de dados local (caso tenha dump local)
+database/*.sqlite
+database/*.sql
+
+# Pastas do sistema operacional/macOS/VSCode
+.DS_Store
+.vscode/
+.idea/
+Thumbs.db
+
