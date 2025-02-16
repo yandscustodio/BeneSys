@@ -94,55 +94,69 @@ app.get("/perfil", verificarTokenCookie, async (req, res) => {
 
 // 🔹 Rota PUT - Atualizar perfil do usuário autenticado
 app.put("/perfil", verificarTokenCookie, async (req, res) => {
-    const {
-        primeiro_nome,
-        ultimo_nome,
-        telefone,
-        email,
-        data_admissao,
-        matricula,
-        cpf,
-        funcao,
-        unidade,
-        cidade,
-        estado,
-        pais,
-        bio
-    } = req.body;
-
     try {
-        // 🔹 Atualiza apenas os campos que foram fornecidos pelo usuário
-        const result = await pool.query(
-            `UPDATE usuarios SET 
-                primeiro_nome = COALESCE($1, primeiro_nome), 
-                ultimo_nome = COALESCE($2, ultimo_nome), 
-                telefone = COALESCE($3, telefone), 
-                email = COALESCE($4, email),
-                data_admissao = COALESCE($5, data_admissao),
-                matricula = COALESCE($6, matricula),
-                cpf = COALESCE($7, cpf),
-                funcao = COALESCE($8, funcao),
-                unidade = COALESCE($9, unidade),
-                cidade = COALESCE($10, cidade),
-                estado = COALESCE($11, estado),
-                pais = COALESCE($12, pais),
-                bio = COALESCE($13, bio)
-            WHERE id = $14 RETURNING *`,
-            [
-                primeiro_nome, ultimo_nome, telefone, email, data_admissao,
-                matricula, cpf, funcao, unidade, cidade, estado, pais, bio, req.usuario.id
-            ]
-        );
+        let { primeiro_nome, ultimo_nome, telefone, email, data_admissao, matricula, cpf, funcao, unidade, cidade, estado, pais, bio, link_instagram, link_linkedin, link_facebook } = req.body;
+        const userId = req.usuario.id; // Obtendo o ID do usuário autenticado pelo token
 
-        if (result.rows.length === 0) {
-            return res.status(404).json({ error: "Usuário não encontrado" });
+        // Se a data_admissao estiver vazia, definir como NULL
+        if (!data_admissao || data_admissao.trim() === "") {
+            data_admissao = null;
+        }
+
+        // Atualizando os dados no banco de dados
+        const result = await pool.query(`
+            UPDATE usuarios 
+            SET primeiro_nome = $1, ultimo_nome = $2, telefone = $3, email = $4, data_admissao = $5, 
+                matricula = $6, cpf = $7, funcao = $8, unidade = $9, cidade = $10, estado = $11, pais = $12, bio = $13, 
+                link_instagram = $14, link_linkedin = $15, link_facebook = $16
+            WHERE id = $17
+            RETURNING *;
+        `, [primeiro_nome, ultimo_nome, telefone, email, data_admissao, matricula, cpf, funcao, unidade, cidade, estado, pais, bio, link_instagram, link_linkedin, link_facebook, userId]);
+
+        if (result.rowCount === 0) {
+            return res.status(404).json({ error: "Usuário não encontrado." });
         }
 
         res.json({ message: "Perfil atualizado com sucesso!", usuario: result.rows[0] });
 
     } catch (error) {
         console.error("Erro ao atualizar perfil:", error);
-        res.status(500).json({ error: "Erro ao atualizar perfil" });
+        res.status(500).json({ error: "Erro ao atualizar perfil." });
+    }
+});
+
+// 🔹 Rota para listar países do banco de dados
+app.get("/paises", async (req, res) => {
+    try {
+        const result = await pool.query("SELECT id, nome FROM paises ORDER BY nome ASC");
+        res.json(result.rows);
+    } catch (error) {
+        console.error("Erro ao buscar países:", error);
+        res.status(500).json({ error: "Erro ao buscar países" });
+    }
+});
+
+// 🔹 Rota para listar estados de um país específico
+app.get("/estados/:id_pais", async (req, res) => {
+    const { id_pais } = req.params;
+    try {
+        const result = await pool.query("SELECT id, nome FROM estados WHERE id_pais = $1 ORDER BY nome ASC", [id_pais]);
+        res.json(result.rows);
+    } catch (error) {
+        console.error("Erro ao buscar estados:", error);
+        res.status(500).json({ error: "Erro ao buscar estados" });
+    }
+});
+
+// 🔹 Rota para listar cidades de um estado específico
+app.get("/cidades/:id_estado", async (req, res) => {
+    const { id_estado } = req.params;
+    try {
+        const result = await pool.query("SELECT id, nome FROM cidades WHERE id_estado = $1 ORDER BY nome ASC", [id_estado]);
+        res.json(result.rows);
+    } catch (error) {
+        console.error("Erro ao buscar cidades:", error);
+        res.status(500).json({ error: "Erro ao buscar cidades" });
     }
 });
 

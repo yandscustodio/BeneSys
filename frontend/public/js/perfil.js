@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", async function () {
     try {
         const response = await fetch("/perfil", { credentials: "include" });
+
         if (!response.ok) {
             throw new Error("Erro ao carregar os dados");
         }
@@ -16,15 +17,33 @@ document.addEventListener("DOMContentLoaded", async function () {
         document.getElementById("data_admissao").value = usuario.data_admissao || "";
         document.getElementById("matricula").value = usuario.matricula || "";
         document.getElementById("cpf").value = usuario.cpf || "";
-        document.getElementById("funcao").value = usuario.funcao || "";
+        document.getElementById("funcao2").value = usuario.funcao || "";
+        document.getElementById("funcao1").value = usuario.funcao || "";
         document.getElementById("unidade").value = usuario.unidade || "";
-        document.getElementById("cidade").value = usuario.cidade || "";
-        document.getElementById("estado").value = usuario.estado || "";
-        document.getElementById("pais").value = usuario.pais || "";
         document.getElementById("bio").value = usuario.bio || "";
         document.getElementById("instagram").value = usuario.link_instagram || "";
         document.getElementById("linkedin").value = usuario.link_linkedin || "";
         document.getElementById("facebook").value = usuario.link_facebook || "";
+
+        // 🔹 Carregar os países no dropdown
+        await carregarPaises();
+
+        // 🔹 Definir o país selecionado e carregar estados automaticamente
+        if (usuario.pais) {
+            document.getElementById("pais").value = usuario.pais;
+            await carregarEstados(usuario.pais);
+        }
+
+        // 🔹 Definir o estado selecionado e carregar cidades automaticamente
+        if (usuario.estado) {
+            document.getElementById("estado").value = usuario.estado;
+            await carregarCidades(usuario.estado);
+        }
+
+        // 🔹 Definir a cidade selecionada
+        if (usuario.cidade) {
+            document.getElementById("cidade").value = usuario.cidade;
+        }
 
     } catch (error) {
         console.error("Erro ao carregar perfil:", error);
@@ -32,6 +51,90 @@ document.addEventListener("DOMContentLoaded", async function () {
         window.location.href = "login.html";
     }
 });
+
+/**
+ * Função para carregar os países no dropdown
+ */
+async function carregarPaises() {
+    try {
+        const response = await fetch("/paises");
+        if (!response.ok) throw new Error("Erro ao buscar países");
+
+        const paises = await response.json();
+        const selectPais = document.getElementById("pais");
+
+        selectPais.innerHTML = '<option value="">Selecione um país</option>';
+        paises.forEach(pais => {
+            selectPais.innerHTML += `<option value="${pais.id}">${pais.nome}</option>`;
+        });
+
+        // Adiciona evento para carregar os estados ao selecionar um país
+        selectPais.addEventListener("change", async function () {
+            const idPais = this.value;
+            if (idPais) {
+                await carregarEstados(idPais);
+            } else {
+                document.getElementById("estado").innerHTML = '<option value="">Selecione um estado</option>';
+                document.getElementById("cidade").innerHTML = '<option value="">Selecione uma cidade</option>';
+            }
+        });
+
+    } catch (error) {
+        console.error("Erro ao carregar países:", error);
+    }
+}
+
+/**
+ * Função para carregar os estados no dropdown com base no país selecionado
+ */
+async function carregarEstados(idPais) {
+    try {
+        const response = await fetch(`/estados/${idPais}`);
+        if (!response.ok) throw new Error("Erro ao buscar estados");
+
+        const estados = await response.json();
+        const selectEstado = document.getElementById("estado");
+
+        selectEstado.innerHTML = '<option value="">Selecione um estado</option>';
+        estados.forEach(estado => {
+            selectEstado.innerHTML += `<option value="${estado.id}">${estado.nome}</option>`;
+        });
+
+        // Adiciona evento para carregar as cidades ao selecionar um estado
+        selectEstado.addEventListener("change", async function () {
+            const idEstado = this.value;
+            if (idEstado) {
+                await carregarCidades(idEstado);
+            } else {
+                document.getElementById("cidade").innerHTML = '<option value="">Selecione uma cidade</option>';
+            }
+        });
+
+    } catch (error) {
+        console.error("Erro ao carregar estados:", error);
+    }
+}
+
+/**
+ * Função para carregar as cidades no dropdown com base no estado selecionado
+ */
+async function carregarCidades(idEstado) {
+    try {
+        const response = await fetch(`/cidades/${idEstado}`);
+        if (!response.ok) throw new Error("Erro ao buscar cidades");
+
+        const cidades = await response.json();
+        const selectCidade = document.getElementById("cidade");
+
+        selectCidade.innerHTML = '<option value="">Selecione uma cidade</option>';
+        cidades.forEach(cidade => {
+            selectCidade.innerHTML += `<option value="${cidade.id}">${cidade.nome}</option>`;
+        });
+
+    } catch (error) {
+        console.error("Erro ao carregar cidades:", error);
+    }
+}
 
 /**
  * Função para formatar o telefone no formato (XX) XXXXX-XXXX ou (XX) XXXX-XXXX
@@ -50,24 +153,25 @@ function formatarTelefone(telefone) {
     }
 }
 
-// 🚀 Função para atualizar os dados do usuário ao clicar no botão "Atualizar"
-document.querySelector("form").addEventListener("submit", async function (e) {
-    e.preventDefault();
-
+// 🚀 Captura o clique no botão "Atualizar"
+document.getElementById("btnAtualizar").addEventListener("click", async function () {
     const dadosAtualizados = {
         primeiro_nome: document.getElementById("primeiro_nome").value.trim(),
         ultimo_nome: document.getElementById("ultimo_nome").value.trim(),
         telefone: document.getElementById("telefone").value.trim(),
         email: document.getElementById("email").value.trim(),
-        data_admissao: document.getElementById("data_admissao").value.trim(),
+        data_admissao: document.getElementById("data_admissao").value.trim() || null,
         matricula: document.getElementById("matricula").value.trim(),
         cpf: document.getElementById("cpf").value.trim(),
-        funcao: document.getElementById("funcao").value.trim(),
+        funcao: document.getElementById("funcao1").value.trim(),
         unidade: document.getElementById("unidade").value.trim(),
         cidade: document.getElementById("cidade").value.trim(),
         estado: document.getElementById("estado").value.trim(),
         pais: document.getElementById("pais").value.trim(),
         bio: document.getElementById("bio").value.trim(),
+        link_instagram: document.getElementById("instagram").value.trim(),
+        link_linkedin: document.getElementById("linkedin").value.trim(),
+        link_facebook: document.getElementById("facebook").value.trim()
     };
 
     try {
